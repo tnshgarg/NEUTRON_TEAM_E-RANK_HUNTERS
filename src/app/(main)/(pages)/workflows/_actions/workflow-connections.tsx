@@ -137,6 +137,7 @@ export const onCreateNodeTemplate = async (
 };
 
 export const onGetWorkflows = async () => {
+  await headers();
   const { userId } = auth();
 
   if (userId) {
@@ -151,7 +152,7 @@ export const onGetWorkflows = async () => {
 };
 
 export const onCreateWorkflow = async (name: string, description: string) => {
-  headers();
+  await headers();
   const user = await currentUser();
 
   if (!user) {
