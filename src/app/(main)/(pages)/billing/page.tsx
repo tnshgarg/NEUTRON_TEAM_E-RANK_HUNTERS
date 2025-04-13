@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import BillingDashboard from "./_components/billing-dashboard";
 
 type Props = {
-  searchParams?: Record<string, string | string[] | undefined>;
+  searchParams?: any;
 };
 
 const Billing = async (props: Props) => {
