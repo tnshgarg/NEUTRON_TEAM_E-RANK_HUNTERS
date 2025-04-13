@@ -44,7 +44,7 @@ async function getWorkflows(userId: string) {
   const workflowsWithApps = await Promise.all(
     workflows.map(async (workflow) => {
       // Determine connected apps for this workflow based on templates and tokens
-      const apps: ConnectedApp[] = [];
+      const apps: any = [];
 
       if (workflow.notionTemplate || workflow.notionAccessToken) {
         apps.push("notion");
@@ -75,7 +75,9 @@ async function getWorkflows(userId: string) {
       });
 
       // Determine the status based on publish field
-      const status = workflow.publish ? "Active" : "Paused";
+      const status: "Active" | "Paused" = workflow.publish
+        ? "Active"
+        : "Paused";
 
       return {
         ...workflow,
