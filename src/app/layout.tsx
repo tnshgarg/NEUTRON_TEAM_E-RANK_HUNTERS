@@ -10,8 +10,8 @@ import { BillingProvider } from "@/providers/billing-provider";
 const font = DM_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Fuzzie.",
-  description: "Automate Your Work With Fuzzie.",
+  title: "Automate AI.",
+  description: "Automate Your Work With Automate AI.",
 };
 
 export default function RootLayout({
@@ -27,7 +27,7 @@ export default function RootLayout({
         <body className={font.className}>
           <ThemeProvider
             attribute="class"
-            defaultTheme="light"
+            defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
           >
