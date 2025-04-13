@@ -17,39 +17,18 @@ interface LogEntry {
 
 const fetchLogs = async (): Promise<LogEntry[]> => {
   // Placeholder function for fetching logs from an API endpoint
-  // Replace this with your actual API call
-  return [
-    {
-      timestamp: "2024-10-27 10:00:00",
-      workflowId: "workflow1",
-      message: "Workflow started",
-    },
-    {
-      timestamp: "2024-10-27 10:00:05",
-      workflowId: "workflow1",
-      message: "Step 1 completed",
-    },
-    {
-      timestamp: "2024-10-27 10:00:10",
-      workflowId: "workflow1",
-      message: "Step 2 completed",
-    },
-    {
-      timestamp: "2024-10-27 10:00:15",
-      workflowId: "workflow1",
-      message: "Workflow finished",
-    },
-    {
-      timestamp: "2024-10-27 11:00:00",
-      workflowId: "workflow2",
-      message: "Workflow started",
-    },
-    {
-      timestamp: "2024-10-27 11:00:10",
-      workflowId: "workflow2",
-      message: "Workflow finished with error",
-    },
-  ];
+  try {
+    const response = await fetch("/api/workflow-logs");
+    if (!response.ok) {
+      throw new Error("Failed to fetch logs");
+    }
+    const data: LogEntry[] = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching logs:", error);
+    // Return an empty array or handle the error as needed
+    return [];
+  }
 };
 
 const LogsPage: React.FC = () => {
