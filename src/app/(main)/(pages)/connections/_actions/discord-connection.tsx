@@ -1,8 +1,8 @@
-'use server'
+"use server";
 
-import { db } from '@/lib/db'
-import { currentUser } from '@clerk/nextjs'
-import axios from 'axios'
+import { db } from "@/lib/db";
+import { currentUser } from "@clerk/nextjs";
+import axios from "axios";
 
 export const onDiscordConnect = async (
   channel_id: string,
@@ -27,7 +27,7 @@ export const onDiscordConnect = async (
           },
         },
       },
-    })
+    });
 
     //if webhook does not exist for this user
     if (!webhook) {
@@ -44,11 +44,11 @@ export const onDiscordConnect = async (
           connections: {
             create: {
               userId: id,
-              type: 'Discord',
+              type: "Discord",
             },
           },
         },
-      })
+      });
     }
 
     //if webhook exists return check for duplicate
@@ -65,7 +65,7 @@ export const onDiscordConnect = async (
             },
           },
         },
-      })
+      });
 
       //if no webhook for channel create new webhook
       if (!webhook_channel) {
@@ -81,18 +81,18 @@ export const onDiscordConnect = async (
             connections: {
               create: {
                 userId: id,
-                type: 'Discord',
+                type: "Discord",
               },
             },
           },
-        })
+        });
       }
     }
   }
-}
+};
 
 export const getDiscordConnectionUrl = async () => {
-  const user = await currentUser()
+  const user = await currentUser();
   if (user) {
     const webhook = await db.discordWebhook.findFirst({
       where: {
@@ -103,20 +103,20 @@ export const getDiscordConnectionUrl = async () => {
         name: true,
         guildName: true,
       },
-    })
+    });
 
-    return webhook
+    return webhook;
   }
-}
+};
 
 export const postContentToWebHook = async (content: string, url: string) => {
-  console.log(content)
-  if (content != '') {
-    const posted = await axios.post(url, { content })
+  console.log(content);
+  if (content != "") {
+    const posted = await axios.post(url, { content });
     if (posted) {
-      return { message: 'success' }
+      return { message: "success" };
     }
-    return { message: 'failed request' }
+    return { message: "failed request" };
   }
-  return { message: 'String empty' }
-}
+  return { message: "String empty" };
+};
