@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import { AnimatedBeam } from "@/components/ui/animated-beam";
 import Circle from "@/components/circle";
 import Icons from "@/components/icons";
@@ -37,7 +37,16 @@ const DashboardClient = ({
     useRef<HTMLDivElement>(null),
   ];
 
-  // Create dynamic workflows based on connected apps
+  // Inside the component:
+  const appRefs = useMemo(() => {
+    const refs: Record<string, React.RefObject<HTMLDivElement>> = {};
+    Object.keys(connectedApps).forEach((app) => {
+      refs[app] = React.createRef();
+    });
+    return refs;
+  }, [connectedApps]);
+
+  // Then inside generateWorkflows:
   const generateWorkflows = () => {
     const connectedAppsList = Object.entries(connectedApps)
       .filter(([_, isConnected]) => isConnected)
@@ -52,58 +61,27 @@ const DashboardClient = ({
       ];
     }
 
-    // Create the "All Connected Apps" workflow
     const allConnected = {
       title: "Workflow 1: All Connected Apps",
       logos: connectedAppsList.map((app) => ({
         app,
-        ref: useRef<HTMLDivElement>(null),
+        ref: appRefs[app], // ✅ use predefined refs
         color: getAppColor(app),
       })),
     };
 
-    // Create additional workflows based on combinations
     const workflows = [allConnected];
 
     if (connectedAppsList.length > 2) {
-      // Without the first app
       workflows.push({
         title: `Workflow 2: Without ${capitalizeFirstLetter(
           connectedAppsList[0]
         )}`,
         logos: connectedAppsList.slice(1).map((app) => ({
           app,
-          ref: useRef<HTMLDivElement>(null),
+          ref: appRefs[app], // ✅
           color: getAppColor(app),
         })),
-      });
-    }
-
-    if (connectedAppsList.length >= 2) {
-      // Basic integration with first two apps
-      workflows.push({
-        title: "Workflow 3: Basic Integration",
-        logos: connectedAppsList.slice(0, 2).map((app) => ({
-          app,
-          ref: useRef<HTMLDivElement>(null),
-          color: getAppColor(app),
-        })),
-      });
-    }
-
-    if (connectedAppsList.length > 2) {
-      // Without the second app if available
-      workflows.push({
-        title: `Workflow 4: Without ${capitalizeFirstLetter(
-          connectedAppsList[1]
-        )}`,
-        logos: [connectedAppsList[0], ...connectedAppsList.slice(2)].map(
-          (app) => ({
-            app,
-            ref: useRef<HTMLDivElement>(null),
-            color: getAppColor(app),
-          })
-        ),
       });
     }
 
@@ -279,7 +257,6 @@ const DashboardClient = ({
                   curvature={0}
                   duration={animationSpeed}
                   pathWidth={3}
-                  active={true}
                   gradientStartColor="#9b87f5"
                   gradientStopColor="#1292FF"
                   pathColor="#e6e6e6"
